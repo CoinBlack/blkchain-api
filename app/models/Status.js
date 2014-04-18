@@ -4,7 +4,7 @@
 var async     = require('async');
 var RpcClient = require('bitcore/RpcClient');
 var config    = require('../../config/config');
-var rpc       = new RpcClient(config.bitcoind);
+var rpc       = new RpcClient(config.blackcoind);
 var bDb       = require('../../lib/BlockDb').default();
 
 function Status() {}

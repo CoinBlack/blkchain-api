@@ -71,7 +71,7 @@ function Address(addrStr) {
 }
 
 Address.prototype._getScriptPubKey = function(hex,n) {
-  // ScriptPubKey is not provided by bitcoind RPC, so we parse it from tx hex.
+  // ScriptPubKey is not provided by blackcoind RPC, so we parse it from tx hex.
 
   var parser = new Parser(new Buffer(hex,'hex'));
   var tx = new BitcoreTransaction();
@@ -132,7 +132,7 @@ Address.prototype.update = function(next, notxlist) {
           var v = txItem.value_sat;
 
           if ( !seen[txItem.txid] ) {
-            if (!notxlist) { 
+            if (!notxlist) {
               txs.push({txid: txItem.txid, ts: txItem.ts});
             }
             seen[txItem.txid]=1;

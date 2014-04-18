@@ -17,11 +17,11 @@ exports.block = function(req, res, next, hash) {
     if (err || !block)
       return common.handleErrors(err, res, next);
     else {
-      bdb.getPoolInfo(block.info.tx[0], function(info) {
-        block.info.poolInfo = info;
+      // bdb.getPoolInfo(block.info.tx[0], function(info) {
+        // block.info.poolInfo = info;
         req.block = block.info;
         return next();
-      });
+      // });
     }
   });
 };
@@ -32,6 +32,7 @@ exports.block = function(req, res, next, hash) {
  */
 exports.show = function(req, res) {
   if (req.block) {
+    // console.log('show', req.block);
     res.jsonp(req.block);
   }
 };
@@ -42,7 +43,7 @@ exports.show = function(req, res) {
 exports.blockindex = function(req, res, next, height) {
   bdb.blockIndex(height, function(err, hashStr) {
     if (err) {
-      console.log(err);
+      console.log('blockindex', err);
       res.status(400).send('Bad Request'); // TODO
     } else {
       res.jsonp(hashStr);
@@ -53,11 +54,13 @@ exports.blockindex = function(req, res, next, height) {
 var getBlock = function(blockhash, cb) {
   bdb.fromHashWithInfo(blockhash, function(err, block) {
     if (err) {
-      console.log(err);
       return cb(err);
     }
 
     // TODO
+    if (!block) {
+      block = {};
+    }
     if (!block.info) {
       console.log('[blocks.js.60]: could not get %s from RPC. Orphan? Error?', blockhash); //TODO
       // Probably orphan
@@ -67,10 +70,10 @@ var getBlock = function(blockhash, cb) {
       };
     }
 
-    bdb.getPoolInfo(block.info.tx[0], function(info) {
-      block.info.poolInfo = info;
+    // bdb.getPoolInfo(block.info.tx[0], function(info) {
+    //   block.info.poolInfo = info;
       return cb(err, block.info);
-    });
+    // });
 
   });
 };
@@ -125,8 +128,7 @@ exports.list = function(req, res) {
       async.mapSeries(blockList,
         function(b, cb) {
           getBlock(b.hash, function(err, info) {
-            if (err) {
-              console.log(err);
+            if (err || !info.tx) {
               return cb(err);
             }
             return cb(err, {
