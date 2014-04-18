@@ -30,6 +30,7 @@ async.series([
     historicSync.sync.destroy(cb);
   },
   function(cb) {
+    console.log('Performing hystoric sync...');
     historicSync.start({
       forceStartFile: program.startfile,
       forceRPC: program.rpc,
