@@ -54,7 +54,7 @@ var getTransaction = function(txid, cb) {
 
     if (!tx || !tx.info) {
       console.log('[transactions.js.48]:: TXid %s not found in RPC. CHECK THIS.', txid);
-      return ({ txid: txid });
+      return cb({ txid: txid });
     }
 
     return cb(null, tx.info);
@@ -148,4 +148,28 @@ exports.list = function(req, res, next) {
       txs: []
     });
   }
+};
+
+/**
+ * List latest tramsactions
+ */
+exports.latest = function(req, res) {
+  var limit = parseInt(req.query.limit || 10);
+  var gte = Math.round(Date.now() / 1000);
+  tDb.getLatestTransactions(gte, limit, function(err, txs) {
+    if (err) {
+      res.status(500).send(err);
+    } else {
+      async.mapSeries(txs, getTransaction, function(err, results) {
+        if (err) {
+          console.log(err);
+          res.status(404).send('TX not found');
+        }
+
+        res.jsonp({
+          txs: results
+        });
+      });
+    }
+  });
 };

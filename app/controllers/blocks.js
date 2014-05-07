@@ -156,3 +156,46 @@ exports.list = function(req, res) {
     }
   });
 };
+
+
+/**
+ * List latest blocks
+ */
+exports.latest = function(req, res) {
+  var limit = parseInt(req.query.limit || 5);
+  var gte = Math.round(Date.now() / 1000);
+  bdb.getLatestBlocks(gte, limit, function(err, blocks) {
+    if (err) {
+      res.status(500).send(err);
+    } else {
+      // var blockList = [];
+
+      // for (var i = 0; i < limit; i++) {
+      //   blockList.push(blocks[i]);
+      // }
+
+      // async.mapSeries(blockList,
+      async.mapSeries(blocks,
+        function(b, cb) {
+          getBlock(b.hash, function(err, info) {
+            if (err || !info.tx) {
+              return cb(err);
+            }
+            return cb(err, {
+              height: info.height,
+              size: info.size,
+              hash: b.hash,
+              time: b.ts || info.time,
+              txlength: info.tx.length,
+              poolInfo: info.poolInfo
+            });
+          });
+        }, function(err, allblocks) {
+          res.jsonp({
+            blocks: allblocks,
+            length: allblocks.length,
+          });
+        });
+    }
+  });
+};

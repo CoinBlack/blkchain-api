@@ -10,11 +10,17 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-concurrent');
   grunt.loadNpmTasks('grunt-env');
   grunt.loadNpmTasks('grunt-markdown');
+  grunt.loadNpmTasks('grunt-contrib-uglify');
+  grunt.loadNpmTasks('grunt-contrib-concat');
+  grunt.loadNpmTasks('grunt-css');
 
   // Project Configuration
   grunt.initConfig({
     pkg: grunt.file.readJSON('package.json'),
     watch: {
+      options: {
+        livereload: true,
+      },
       readme: {
         files: ['README.md'],
         tasks: ['markdown']
@@ -22,9 +28,26 @@ module.exports = function(grunt) {
       js: {
         files: ['Gruntfile.js', 'insight.js', 'app/**/*.js'],
         tasks: ['jshint'],
-        options: {
-          livereload: true,
-        },
+      },
+      main: {
+        files: ['public/src/js/**/*.js'],
+        // tasks: ['concat:main', 'uglify:main', 'macreload'],
+        tasks: ['concat:main', 'uglify:main'],
+      },
+      css: {
+        files: ['public/src/css/main/**/*.css'],
+        // tasks: ['concat:css', 'cssmin', 'macreload'],
+        tasks: ['concat:css', 'cssmin:css'],
+      },
+      themes: {
+        files: ['public/src/css/themes/**/*.css'],
+        // tasks: ['concat:css', 'cssmin', 'macreload'],
+        tasks: ['cssmin:theme_black', 'cssmin:theme_contrast', 'cssmin:theme_light'],
+      },
+      html: {
+        files: ['public/**/*.html'],
+        // tasks: ['concat:css', 'cssmin', 'macreload'],
+        // tasks: ['concat:css', 'cssmin'],
       },
         // we monitor only app/models/* because we have test for models only now
 //      test: {
@@ -72,6 +95,79 @@ module.exports = function(grunt) {
         NODE_ENV: 'test'
       }
     },
+    concat: {
+      options: {
+        process: function(src, filepath) {
+          if (filepath.substr(filepath.length - 2) === 'js') {
+            return '// Source: ' + filepath + '\n' +
+              src.replace(/(^|\n)[ \t]*('use strict'|"use strict");?\s*/g, '$1');
+          } else {
+            return src;
+          }
+        }
+      },
+      jquery: {
+        src: ['public/lib/jquery/dist/jquery.min.js'],
+        dest: 'public/js/jquery.min.js'
+      },
+      vendors: {
+        src: ['public/src/js/ios-imagefile-megapixel/megapix-image.js', 'public/lib/qrcode-generator/js/qrcode.js', 'public/src/js/jsqrcode/grid.js', 'public/src/js/jsqrcode/version.js', 'public/src/js/jsqrcode/detector.js', 'public/src/js/jsqrcode/formatinf.js', 'public/src/js/jsqrcode/errorlevel.js', 'public/src/js/jsqrcode/bitmat.js', 'public/src/js/jsqrcode/datablock.js', 'public/src/js/jsqrcode/bmparser.js', 'public/src/js/jsqrcode/datamask.js', 'public/src/js/jsqrcode/rsdecoder.js', 'public/src/js/jsqrcode/gf256poly.js', 'public/src/js/jsqrcode/gf256.js', 'public/src/js/jsqrcode/decoder.js', 'public/src/js/jsqrcode/qrcode.js', 'public/src/js/jsqrcode/findpat.js', 'public/src/js/jsqrcode/alignpat.js', 'public/src/js/jsqrcode/databr.js', 'public/lib/momentjs/min/moment.min.js', 'public/lib/zeroclipboard/ZeroClipboard.min.js'],
+        dest: 'public/js/vendors.js'
+      },
+      angular: {
+        src: ['public/lib/angular/angular.min.js', 'public/lib/angular-resource/angular-resource.min.js', 'public/lib/angular-route/angular-route.min.js', 'public/lib/angular-qrcode/qrcode.js', 'public/lib/angular-animate/angular-animate.min.js', 'public/lib/angular-bootstrap/ui-bootstrap.js', 'public/lib/angular-bootstrap/ui-bootstrap-tpls.js', 'public/lib/angular-ui-utils/ui-utils.min.js', 'public/lib/ngprogress/build/ngProgress.min.js'],
+        dest: 'public/js/angularjs-all.js'
+      },
+      main: {
+        src: ['public/src/js/app.js', 'public/src/js/controllers/*.js', 'public/src/js/services/*.js', 'public/src/js/directives.js', 'public/src/js/filters.js', 'public/src/js/config.js', 'public/src/js/init.js', 'public/src/js/themes.js'],
+        dest: 'public/js/main.js'
+      },
+      css: {
+        src: ['public/lib/bootstrap/dist/css/bootstrap.min.css', 'public/src/css/main/**/*.css'],
+        dest: 'public/css/main.css'
+      }
+    },
+    uglify: {
+      options: {
+        banner: '/*! <%= pkg.name %> <%= pkg.version %> */\n',
+        // sourceMap: true,
+        mangle: false
+      },
+      defineGetter_polyfil: {
+        src: 'public/src/js/defineGetter_polyfil.js',
+        dest: 'public/js/defineGetter_polyfil.min.js'
+      },
+      vendors: {
+        src: 'public/js/vendors.js',
+        dest: 'public/js/vendors.min.js'
+      },
+      angular: {
+        src: 'public/js/angularjs-all.js',
+        dest: 'public/js/angularjs-all.min.js'
+      },
+      main: {
+        src: 'public/js/main.js',
+        dest: 'public/js/main.min.js'
+      }
+    },
+    cssmin: {
+      css: {
+        src: 'public/css/main.css',
+        dest: 'public/css/main.min.css'
+      },
+      theme_black: {
+        src: 'public/src/css/themes/black.css',
+        dest: 'public/css/black.min.css'
+      },
+      theme_contrast: {
+        src: 'public/src/css/themes/contrast.css',
+        dest: 'public/css/contrast.min.css'
+      },
+      theme_light: {
+        src: 'public/src/css/themes/light.css',
+        dest: 'public/css/light.min.css'
+      }
+    },
     markdown: {
       all: {
         files: [
@@ -91,6 +187,10 @@ module.exports = function(grunt) {
 
   //Default task(s).
   grunt.registerTask('default', ['jshint', 'concurrent']);
+
+  //Compile task (concat + minify)
+  // grunt.registerTask('compile', ['concat', 'uglify', 'cssmin', 'macreload']);
+  grunt.registerTask('compile', ['concat', 'uglify', 'cssmin']);
 
   //Test task.
   grunt.registerTask('test', ['env:test', 'mochaTest']);

@@ -50,6 +50,14 @@ module.exports = function(app, historicSync, peerSync) {
     next();
   });
 
+  app.use(function(req, res, next) {
+    res.set('Cache-Control', 'public, max-age=0');
+    res.set('Expires', new Date(Date.now()));
+    res.set('Last-Modified', new Date(Date.now()));
+    // res.set('Content-Type', 'application/json');
+    next();
+  });
+
   //routes should be at the last
   app.use(app.router);
 

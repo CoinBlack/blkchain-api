@@ -92,6 +92,7 @@ Address.prototype.getUtxo = function(next) {
     // Complete utxo info
     async.eachLimit(txOut,CONCURRENCY,function (txItem, a_c) {
       db.fromIdInfoSimple(txItem.txid, function(err, info) {
+        if (!info || !info.hex) return a_c(err);
 
         var scriptPubKey = self._getScriptPubKey(info.hex, txItem.index);
 
@@ -124,53 +125,64 @@ Address.prototype.update = function(next, notxlist) {
   var db   = TransactionDb;
   async.series([
     function (cb) {
-      var seen={};
-      db.fromAddr(self.addrStr, function(err,txOut){
-        if (err) return cb(err);
-        txOut.forEach(function(txItem){
-          var add=0, addSpend=0;
-          var v = txItem.value_sat;
+      // var seen={};
+      // db.fromAddr(self.addrStr, function(err,txOut){
+      //   if (err) return cb(err);
+      //   txOut.forEach(function(txItem){
+      //     var add=0, addSpend=0;
+      //     var v = txItem.value_sat;
 
-          if ( !seen[txItem.txid] ) {
-            if (!notxlist) {
-              txs.push({txid: txItem.txid, ts: txItem.ts});
-            }
-            seen[txItem.txid]=1;
-            add=1;
-          }
+      //     if ( !seen[txItem.txid] ) {
+      //       if (!notxlist) {
+      //         txs.push({txid: txItem.txid, ts: txItem.ts});
+      //       }
+      //       seen[txItem.txid]=1;
+      //       add=1;
+      //     }
 
-          if (txItem.spentTxId && !seen[txItem.spentTxId]  ) {
-            if (!notxlist) {
-              txs.push({txid: txItem.spentTxId, ts: txItem.spentTs});
-            }
-            seen[txItem.spentTxId]=1;
-            addSpend=1;
-          }
+      //     if (txItem.spentTxId && !seen[txItem.spentTxId]  ) {
+      //       if (!notxlist) {
+      //         txs.push({txid: txItem.spentTxId, ts: txItem.spentTs});
+      //       }
+      //       seen[txItem.spentTxId]=1;
+      //       addSpend=1;
+      //     }
 
-          if (txItem.isConfirmed) {
-            self.txApperances += add;
-            self.totalReceivedSat += v;
-            if (! txItem.spentTxId ) {
-              //unspent
-              self.balanceSat   += v;
-            }
-            else if(!txItem.spentIsConfirmed) {
-              // unspent
-              self.balanceSat   += v;
-              self.unconfirmedBalanceSat -= v;
-              self.unconfirmedTxApperances += addSpend;
-            }
-            else {
-              // spent
-              self.totalSentSat += v;
-              self.txApperances += addSpend;
-            }
-          }
-          else {
-            self.unconfirmedBalanceSat += v;
-            self.unconfirmedTxApperances += add;
-          }
-        });
+      //     if (txItem.isConfirmed) {
+      //       self.txApperances += add;
+      //       self.totalReceivedSat += v;
+      //       if (! txItem.spentTxId ) {
+      //         //unspent
+      //         self.balanceSat   += v;
+      //       }
+      //       else if(!txItem.spentIsConfirmed) {
+      //         // unspent
+      //         self.balanceSat   += v;
+      //         self.unconfirmedBalanceSat -= v;
+      //         self.unconfirmedTxApperances += addSpend;
+      //       }
+      //       else {
+      //         // spent
+      //         self.totalSentSat += v;
+      //         self.txApperances += addSpend;
+      //       }
+      //     }
+      //     else {
+      //       self.unconfirmedBalanceSat += v;
+      //       self.unconfirmedTxApperances += add;
+      //     }
+      //   });
+      //   return cb();
+      // });
+      db.updateAddress(self.addrStr, notxlist, function (err, address, txs1) {
+        if (err) {return cb(err);}
+        self.txApperances = address.txApperances;
+        self.totalReceivedSat = address.totalReceivedSat;
+        self.totalSentSat = address.totalSentSat;
+        self.balanceSat = address.balanceSat;
+        self.unconfirmedBalanceSat = address.unconfirmedBalanceSat;
+        self.unconfirmedTxApperances = address.unconfirmedTxApperances;
+        txs = txs1;
         return cb();
       });
     },

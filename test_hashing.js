@@ -1,0 +1,21 @@
+  // console.log('---test10000 LTC',
+  // 	'01000000ae178934851bfa0e83ccb6a3fc4bfddff3641e104b6c4680c31509074e699be2bd672d8d2199ef37a59678f92443083e3b85edef8b45c71759371f823bab59a97126614f44d5001d45920180\n***',
+  // 	require('bitcore/util/util').formatHashFull(require('bitcore/util/util').scrypt(new Buffer('01000000ae178934851bfa0e83ccb6a3fc4bfddff3641e104b6c4680c31509074e699be2bd672d8d2199ef37a59678f92443083e3b85edef8b45c71759371f823bab59a97126614f44d5001d45920180', 'hex'))));
+  // console.log('---test62548 BC',
+  // 	'06000000898a1cf6c37cea14bb5696493b725d58bd18118171686775a23ae35ae3e18ce7ac1695f7429e9de385a6d9f4ae62fb9c89b38757007a654a644ad6324160fafdc49645535e78041d00000000\n***',
+  // 	require('bitcore/util/util').formatHashFull(require('bitcore/util/util').scrypt(new Buffer('06000000898a1cf6c37cea14bb5696493b725d58bd18118171686775a23ae35ae3e18ce7ac1695f7429e9de385a6d9f4ae62fb9c89b38757007a654a644ad6324160fafdc49645535e78041d00000000', 'hex'))));
+  // console.log('---test62548 BC no Buffer',
+  // 	'06000000898a1cf6c37cea14bb5696493b725d58bd18118171686775a23ae35ae3e18ce7ac1695f7429e9de385a6d9f4ae62fb9c89b38757007a654a644ad6324160fafdc49645535e78041d00000000\n***',
+  // 	require('bitcore/util/util').formatHashFull(require('bitcore/util/util').scrypt('06000000898a1cf6c37cea14bb5696493b725d58bd18118171686775a23ae35ae3e18ce7ac1695f7429e9de385a6d9f4ae62fb9c89b38757007a654a644ad6324160fafdc49645535e78041d00000000')));
+var scrypt = require('scrypt');
+// var keyString = "06000000898a1cf6c37cea14bb5696493b725d58bd18118171686775a23ae35ae3e18ce7ac1695f7429e9de385a6d9f4ae62fb9c89b38757007a654a644ad6324160fafdc49645535e78041d00000000";
+// var keyStringObject = new String(keyString);
+// var keyBuffer = new Buffer(keyString);
+// var message = "06000000898a1cf6c37cea14bb5696493b725d58bd18118171686775a23ae35ae3e18ce7ac1695f7429e9de385a6d9f4ae62fb9c89b38757007a654a644ad6324160fafdc49645535e78041d00000000";
+
+// kdf.config.saltEncoding = "hex";
+// kdf.config.keyEncoding = "hex";
+var kdf = scrypt.KDF();
+var buf = new Buffer("06000000898a1cf6c37cea14bb5696493b725d58bd18118171686775a23ae35ae3e18ce7ac1695f7429e9de385a6d9f4ae62fb9c89b38757007a654a644ad6324160fafdc49645535e78041d00000000", 'hex');
+var res = kdf(buf,{"N":1024,"r":1,"p":1},32,buf);
+console.log(res.hash);

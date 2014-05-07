@@ -8,6 +8,13 @@ var util = require('bitcore/util/util');
 module.exports.init = function(app, io_ext) {
   ios = io_ext;
   ios.set('log level', 1); // reduce logging
+  ios.set('transports', [
+    'websocket',
+    'flashsocket',
+    'htmlfile',
+    'jsonp-polling',
+    'xhr-polling',
+  ]);
   ios.sockets.on('connection', function(socket) {
     socket.on('subscribe', function(topic) {
       socket.join(topic);

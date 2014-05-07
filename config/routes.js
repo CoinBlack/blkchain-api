@@ -11,7 +11,9 @@ module.exports = function(app) {
 
   //Block routes
   var blocks = require('../app/controllers/blocks');
-  app.get(apiPrefix + '/blocks', blocks.list);
+  // app.get(apiPrefix + '/blocks', blocks.list);
+  app.get(apiPrefix + '/blocks', blocks.latest);
+  app.get(apiPrefix + '/blocks/latest', blocks.latest);
 
 
   app.get(apiPrefix + '/block/:blockHash', blocks.show);
@@ -25,12 +27,14 @@ module.exports = function(app) {
   app.get(apiPrefix + '/tx/:txid', transactions.show);
   app.param('txid', transactions.transaction);
   app.get(apiPrefix + '/txs', transactions.list);
+  app.get(apiPrefix + '/txs/latest', transactions.latest);
   app.post(apiPrefix + '/tx/send', transactions.send);
 
   // Address routes
   var addresses = require('../app/controllers/addresses');
-  app.get(apiPrefix + '/addr/:addr', addresses.show);
-  app.get(apiPrefix + '/addr/:addr/utxo', addresses.utxo);
+  app.get(apiPrefix + '/address/:addr', addresses.show);
+  app.get(apiPrefix + '/address/:addr/balance', addresses.balance);
+  app.get(apiPrefix + '/address/:addr/utxo', addresses.utxo);
 
   // Status route
   var st = require('../app/controllers/status');

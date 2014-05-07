@@ -1,7 +1,7 @@
 {
   "name": "insight-bitcore-api",
   "description": "An open-source bitcoin blockchain API. The Insight API provides you with a convenient, powerful and simple way to query and broadcast data on the bitcoin network and build your own services with it.",
-  "version": "0.1.5",
+  "version": "0.1.6",
   "author": {
     "name": "Ryan X Charles",
     "email": "ryan@bitpay.com"
@@ -47,26 +47,28 @@
     "node": "*"
   },
   "scripts": {
-    "start": "node node_modules/grunt-cli/bin/grunt"
+    "start": "INSIGHT_NETWORK=livenet NODE_ENV=production INSIGHT_PUBLIC_PATH=public node node_modules/grunt-cli/bin/grunt"
   },
   "dependencies": {
-    "bitcore": "git://github.com/bitpay/bitcore.git#9ef8b781826eac502783ff74b3dc2949cfc237ed",
+    "async": "^0.8.0",
     "base58-native": "0.1.2",
-    "async": "*",
+    "bignum": "*",
+    "bitcore": "git://github.com/bitpay/bitcore.git#9ef8b781826eac502783ff74b3dc2949cfc237ed",
+    "bufferput": "git://github.com/bitpay/node-bufferput.git",
+    "buffertools": "*",
+    "chai": "~1.8.1",
+    "commander": "*",
+    "express": "~3.4.7",
+    "glob": "*",
     "leveldown": "*",
     "levelup": "*",
-    "glob": "*",
-    "soop": "git://github.com/gasteve/node-soop.git",
-    "commander": "*",
-    "bignum": "*",
-    "express": "~3.4.7",
-    "buffertools": "*",
-    "should": "~2.1.1",
-    "socket.io": "~0.9.16",
     "moment": "~2.5.0",
+    "newrelic": "^1.5.2",
+    "redis": "^0.10.1",
+    "should": "~2.1.1",
     "sinon": "~1.7.3",
-    "chai": "~1.8.1",
-    "bufferput": "git://github.com/bitpay/node-bufferput.git",
+    "socket.io": "~0.9.16",
+    "soop": "git://github.com/gasteve/node-soop.git",
     "xmlhttprequest": "~1.6.0"
   },
   "devDependencies": {
@@ -79,6 +81,9 @@
     "grunt-nodemon": "~0.2.0",
     "grunt-mocha-test": "~0.8.1",
     "should": "2.1.1",
-    "grunt-markdown": "~0.5.0"
+    "grunt-markdown": "~0.5.0",
+    "grunt-contrib-concat": "~0.3.0",
+    "grunt-contrib-uglify": "~0.3.2",
+    "grunt-css": "~0.5.4"
   }
 }
