@@ -15,7 +15,6 @@ results
 build
 
 node_modules
-public
 
 # extras
 *.swp
