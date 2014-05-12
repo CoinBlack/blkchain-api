@@ -68,6 +68,7 @@ if (!config.disableHistoricSync) {
     }
     if (peerSync) peerSync.allowReorgs = true;
     historicSync.updateAllAddresses();
+    // historicSync.refreshAllAddresses();
   });
 }
 else
