@@ -64,7 +64,6 @@
     "levelup": "*",
     "moment": "~2.5.0",
     "newrelic": "^1.5.2",
-    "redis": "^0.10.1",
     "should": "~2.1.1",
     "sinon": "~1.7.3",
     "socket.io": "~0.9.16",

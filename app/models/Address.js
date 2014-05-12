@@ -125,55 +125,6 @@ Address.prototype.update = function(next, notxlist) {
   var db   = TransactionDb;
   async.series([
     function (cb) {
-      // var seen={};
-      // db.fromAddr(self.addrStr, function(err,txOut){
-      //   if (err) return cb(err);
-      //   txOut.forEach(function(txItem){
-      //     var add=0, addSpend=0;
-      //     var v = txItem.value_sat;
-
-      //     if ( !seen[txItem.txid] ) {
-      //       if (!notxlist) {
-      //         txs.push({txid: txItem.txid, ts: txItem.ts});
-      //       }
-      //       seen[txItem.txid]=1;
-      //       add=1;
-      //     }
-
-      //     if (txItem.spentTxId && !seen[txItem.spentTxId]  ) {
-      //       if (!notxlist) {
-      //         txs.push({txid: txItem.spentTxId, ts: txItem.spentTs});
-      //       }
-      //       seen[txItem.spentTxId]=1;
-      //       addSpend=1;
-      //     }
-
-      //     if (txItem.isConfirmed) {
-      //       self.txApperances += add;
-      //       self.totalReceivedSat += v;
-      //       if (! txItem.spentTxId ) {
-      //         //unspent
-      //         self.balanceSat   += v;
-      //       }
-      //       else if(!txItem.spentIsConfirmed) {
-      //         // unspent
-      //         self.balanceSat   += v;
-      //         self.unconfirmedBalanceSat -= v;
-      //         self.unconfirmedTxApperances += addSpend;
-      //       }
-      //       else {
-      //         // spent
-      //         self.totalSentSat += v;
-      //         self.txApperances += addSpend;
-      //       }
-      //     }
-      //     else {
-      //       self.unconfirmedBalanceSat += v;
-      //       self.unconfirmedTxApperances += add;
-      //     }
-      //   });
-      //   return cb();
-      // });
       db.updateAddress(self.addrStr, notxlist, function (err, address, txs1) {
         if (err) {return cb(err);}
         self.txApperances = address.txApperances;
@@ -204,4 +155,3 @@ Address.prototype.update = function(next, notxlist) {
 };
 
 module.exports = require('soop')(Address);
-
