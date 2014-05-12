@@ -32,10 +32,13 @@ module.exports = function(app) {
 
   // Address routes
   var addresses = require('../app/controllers/addresses');
-  app.get(apiPrefix + '/address/top100', addresses.top100);
   app.get(apiPrefix + '/address/:addr', addresses.show);
   app.get(apiPrefix + '/address/:addr/balance', addresses.balance);
   app.get(apiPrefix + '/address/:addr/utxo', addresses.utxo);
+
+  // Top100 routes
+  var top100 = require('../app/controllers/top100');
+  app.get(apiPrefix + '/top100', top100.show);
 
   // Status route
   var st = require('../app/controllers/status');
