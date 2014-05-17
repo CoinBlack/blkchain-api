@@ -1,9 +1,9 @@
 'use strict';
 
-require('nodetime').profile({
-    accountKey: 'a05c02bfbd15a64e6960c20b90ee6255e42027e3',
-    appName: 'blkchain-dev'
-  });
+// require('nodetime').profile({
+//     accountKey: 'a05c02bfbd15a64e6960c20b90ee6255e42027e3',
+//     appName: 'blkchain-dev'
+//   });
 
 //Set the node enviornment variable if not set before
 process.env.NODE_ENV = process.env.NODE_ENV || 'development';
