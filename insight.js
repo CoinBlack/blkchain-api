@@ -71,7 +71,7 @@ if (!config.disableHistoricSync) {
       console.log('[historic_sync] ' + txt);
     }
     if (peerSync) peerSync.allowReorgs = true;
-    historicSync.updateAllAddresses();
+    // historicSync.updateAllAddresses();
     // historicSync.refreshAllAddresses();
   });
 }
