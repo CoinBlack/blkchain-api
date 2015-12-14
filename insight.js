@@ -11,7 +11,7 @@ process.env.NODE_ENV = process.env.NODE_ENV || 'development';
 /**
  * Module dependencies.
  */
-var newrelic = require('newrelic');
+// var newrelic = require('newrelic');
 var express = require('express'),
   fs = require('fs'),
   PeerSync = require('./lib/PeerSync'),
@@ -81,7 +81,7 @@ else
 
 //express settings
 require('./config/express')(expressApp, historicSync, peerSync);
-expressApp.locals.newrelic = newrelic;
+// expressApp.locals.newrelic = newrelic;
 //Bootstrap routes
 require('./config/routes')(expressApp);
 
