@@ -1,5 +1,4 @@
 #!/bin/bash
-new_relic_license_key=---license_key_here---
 #echo "########### The server will reboot when the script is complete"
 echo "########### Changing to home dir"
 cd ~
