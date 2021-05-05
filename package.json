@@ -68,7 +68,7 @@
     "sinon": "~1.7.3",
     "socket.io": "~0.9.16",
     "soop": "git://github.com/gasteve/node-soop.git",
-    "xmlhttprequest": "~1.6.0"
+    "xmlhttprequest": ">=1.7.0"
   },
   "devDependencies": {
     "grunt": "~0.4.2",
